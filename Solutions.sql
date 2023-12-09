@@ -1,3 +1,5 @@
+/* Link to Problems: https://leetcode.com/studyplan/top-sql-50/ */
+
 /*1*/
 select product_id from Products where low_fats = 'Y' and recyclable = 'Y';
 
