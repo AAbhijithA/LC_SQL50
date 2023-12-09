@@ -37,3 +37,17 @@ select a.machine_id, ROUND(AVG(b.timestamp - a.timestamp),3) as processing_time
 from Activity a, Activity b 
 where a.machine_id = b.machine_id and a.process_id = b.process_id and a.activity_type = 'start' and b.activity_type = 'end' 
 group by a.machine_id; 
+
+/*11*/
+select T.* 
+from (select E.name as name, B.bonus as bonus 
+from Employee E left join Bonus B 
+on E.empId = B.empId) T 
+where T.bonus is null or T.bonus < 1000;
+
+/*12 (Tricky)*/
+select T.student_id, T.student_name, T.subject_name, count(E.student_id) as attended_exams 
+from (select student_id, student_name, subject_name from Students, Subjects) T left join Examinations E 
+on T.student_id = E.student_id and T.subject_name = E.subject_name 
+group by T.student_id, T.subject_name 
+order by T.student_id, T.subject_name;
