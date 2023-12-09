@@ -51,3 +51,15 @@ from (select student_id, student_name, subject_name from Students, Subjects) T l
 on T.student_id = E.student_id and T.subject_name = E.subject_name 
 group by T.student_id, T.subject_name 
 order by T.student_id, T.subject_name;
+
+/*13*/
+select e.name 
+from (select managerId, count(*) as dreport from Employee group by managerId) Sq, Employee e 
+where Sq.managerId is not null and Sq.managerId = e.id and Sq.dreport >= 5; 
+
+/*14 (Tricky)*/
+/* Here you can write an if condition of eqality and what it must return if true or false */
+select s.user_id, ROUND(AVG( if( c.action = "confirmed", 1, 0 ) ), 2) as confirmation_rate
+from Signups s left join Confirmations c 
+on s.user_id = c.user_id 
+group by s.user_id;
