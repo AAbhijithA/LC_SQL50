@@ -192,3 +192,25 @@ order by e1.employee_id;
 select employee_id, department_id from Employee
 where employee_id in (select employee_id from Employee group by employee_id having count(*) = 1)
 or primary_flag = 'Y';
+
+/*32*/
+select x, y, z, if(x + y > z and x + z > y and y + z > x,"Yes","No") as triangle
+from Triangle;
+
+/*33*/
+select l1.num as ConsecutiveNums 
+from Logs l1, Logs l2, Logs l3 
+where l1.num = l2.num and l2.num = l3.num and l1.id + 1 = l2.id and l2.id + 1 = l3.id
+group by l1.num;
+
+/*34*/
+select product_id, new_price as price from Products where (product_id,change_date) in (select product_id, max(change_date) from Products where change_date <= '2019-08-16' group by product_id)
+union
+select distinct product_id, 10 as price from Products where product_id not in (select product_id from Products where change_date <= '2019-08-16');
+
+/*35*/
+select T.person_name
+from (select sorted.person_name as person_name, (@w := @w + sorted.weight) as cWeight 
+      from (select @w := 0) foo, (select * from Queue order by turn) sorted 
+      order by cWeight desc) T
+where T.cWeight <= 1000 limit 1;
