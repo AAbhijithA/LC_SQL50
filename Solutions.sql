@@ -1,27 +1,43 @@
 /* Link to Problems: https://leetcode.com/studyplan/top-sql-50/ */
 
 /*1*/
-select product_id from Products where low_fats = 'Y' and recyclable = 'Y';
+select product_id 
+from Products 
+where low_fats = 'Y' and recyclable = 'Y';
 
 /*2*/
-select name from Customer where referee_id is null or referee_id != 2;
+select name 
+from Customer 
+where referee_id is null or referee_id != 2;
 
 /*3*/
-select name, population, area from World where population >= 25000000 or area >= 3000000;
+select name, population, area 
+from World 
+where population >= 25000000 or area >= 3000000;
 
 /*4*/
-select distinct author_id as id from Views where author_id = viewer_id order by author_id; 
+select distinct author_id as id 
+from Views 
+where author_id = viewer_id order by author_id; 
 
 /*5*/
-select tweet_id from Tweets where content like '________________%';
+select tweet_id 
+from Tweets 
+where content like '________________%';
 /*OR*/
-select tweet_id from Tweets where CHAR_LENGTH(content) > 15;
+select tweet_id 
+from Tweets 
+where CHAR_LENGTH(content) > 15;
 
 /*6*/
-select U.unique_id, E.name from Employees E left join EmployeeUNI U on U.id = E.id;
+select U.unique_id, E.name 
+from Employees E left join EmployeeUNI U 
+on U.id = E.id;
 
 /*7*/
-select product_name, year, price from Sales, Product where Sales.product_id = Product.product_id;
+select product_name, year, price 
+from Sales, Product 
+where Sales.product_id = Product.product_id;
 
 /*8*/
 select customer_id, count(*) as count_no_trans 
@@ -30,7 +46,8 @@ where visit_id not in (select visit_id from Transactions) group by customer_id;
 
 /*9*/
 /* datediff() is a function that returns the number of days of difference between 2 dates */
-select w1.id from Weather w1, Weather w2 
+select w1.id 
+from Weather w1, Weather w2 
 where datediff(w1.recordDate, w2.recordDate) = 1 and w1.temperature > w2.temperature;
 
 /*10*/
@@ -108,3 +125,24 @@ SUM(amount) as trans_total_amount,
 SUM(if(state = 'approved',amount,0)) as approved_total_amount
 from Transactions
 group by month, country;
+
+/*21*/
+select ROUND(AVG(if(Sq.first_order_date = d.customer_pref_delivery_date,1,0))*100,2) as immediate_percentage
+from (select customer_id, min(order_date) as first_order_date
+      from Delivery
+      group by customer_id) Sq, Delivery d 
+where d.customer_id = Sq.customer_id and Sq.first_order_date = d.order_date;
+
+/*22*/
+select ROUND(count(distinct a1.player_id) / (select count(distinct player_id) from Activity),2) as fraction
+from (select player_id as pid, min(event_date) as ed 
+      from Activity 
+      group by pid) FL, Activity a1
+where a1.player_id = FL.pid and datediff(a1.event_date,FL.ed) = 1;
+
+/*23*/
+select teacher_id, count(distinct subject_id) as cnt 
+from Teacher
+group by teacher_id;
+
+/*24*/
