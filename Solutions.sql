@@ -156,3 +156,39 @@ select s.product_id, fs.myear as first_year, s.quantity, s.price
 from (select product_id, min(year) as myear 
       from Sales group by product_id) fs, Sales s
 where fs.product_id = s.product_id and fs.myear = s.year;
+
+/*26*/
+select class 
+from Courses 
+group by class having count(*) >= 5;
+
+/*27*/
+select user_id, count(*) as followers_count
+from Followers
+group by user_id
+order by user_id;
+
+/*28*/
+select max(T.num) as num 
+from (select num 
+from MyNumbers 
+group by num having count(*) = 1) T;
+
+/*29*/
+select T.customer_id
+from (select customer_id from Customer 
+group by customer_id, product_key) T
+group by customer_id
+having count(*) = (select count(*) from Product);
+
+/*30*/
+select e1.employee_id, e1.name, count(*) as reports_count, ROUND(AVG(e2.age),0) as average_age
+from Employees e1, Employees e2
+where e1.employee_id = e2.reports_to
+group by e1.employee_id
+order by e1.employee_id;  
+
+/*31*/
+select employee_id, department_id from Employee
+where employee_id in (select employee_id from Employee group by employee_id having count(*) = 1)
+or primary_flag = 'Y';
