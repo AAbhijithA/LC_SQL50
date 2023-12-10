@@ -278,3 +278,45 @@ from (
     on e.departmentId = d.id
 ) Query
 where Ranking <= 3;
+
+/*44*/
+/*concat() concatenates 2 strings, 
+upper() uppercase of string, 
+lower() lowercase of string, 
+substr(s,ind,l) s is string ind is index to start from (1 - indexing) and l is length to cut (if not filled the whole string from ind to end is taken)*/
+select u.user_id, concat(upper(substr(u.name,1,1)),lower(substr(u.name,2))) as name
+from Users u
+order by u.user_id;
+
+/*45*/
+select * 
+from Patients where 
+conditions like '% DIAB1%' or conditions like 'DIAB1%';
+
+/*46*/
+delete p1 from Person p1, Person p2
+where p1.email = p2.email and p1.id > p2.id;
+
+/*47*/
+select if(count(*) = 0,null,salary) as SecondHighestSalary 
+from (select salary 
+      from (select e.salary, (@r := @r + 1) as r 
+            from (select @r := 0) as f,(select distinct salary from Employee) as e
+      order by salary desc) T1
+      where r = 2) T2;
+
+/*48*/
+
+
+/*49*/
+select p.product_name, SUM(o.unit) as unit
+from Products p, Orders o
+where p.product_id = o.product_id and o.order_date like '2020-02%'
+group by p.product_id
+having unit >= 100;
+
+/*50*/
+/*regexp is used to write regex to match for the given string*/
+select * 
+from Users 
+where mail regexp '^[A-Za-z][A-Za-z0-9_.-]*@leetcode[.]com$';
