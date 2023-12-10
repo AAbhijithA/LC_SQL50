@@ -65,3 +65,29 @@ select s.user_id, ROUND(AVG( if( c.action = "confirmed", 1, 0 ) ), 2) as confirm
 from Signups s left join Confirmations c 
 on s.user_id = c.user_id 
 group by s.user_id;
+
+/*15*/
+select * from Cinema c 
+where mod(c.id,2) = 1 and c.description != "boring" 
+order by c.rating desc;
+
+/*16*/
+select p.product_id, if( ROUND( SUM(p.price*u.units) / SUM(u.units), 2 ) is null, 0, ROUND( SUM(p.price*u.units) / SUM(u.units), 2 ) ) as average_price
+from Prices p left join UnitsSold u
+on p.product_id = u.product_id and u.purchase_date >= p.start_date and u.purchase_date <= p.end_date 
+group by p.product_id;
+
+/*17*/
+select p.project_id, ROUND(AVG(e.experience_years),2) as average_years
+from Project p, Employee e
+where p.employee_id = e.employee_id
+group by p.project_id;
+
+/*18*/
+select * 
+from (select r.contest_id, ROUND(count(u.user_id) * 100 / T.total, 2) as percentage
+      from (select count(*) as total from Users) T, Users u left join Register r
+      on u.user_id = r.user_id
+      group by r.contest_id) fQ
+where fQ.contest_id is not null
+order by fQ.percentage desc, fQ.contest_id asc;
