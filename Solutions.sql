@@ -305,8 +305,15 @@ from (select salary
       order by salary desc) T1
       where r = 2) T2;
 
-/*48*/
-
+/*48 (tricky)*/
+/* group_concat() concatenates them as a group with the spearator */
+select 
+      sell_date, 
+      count(distinct product) as num_sold, 
+      group_concat(distinct product order by product asc separator ',') as products
+from Activities
+group by sell_date
+order by sell_date;
 
 /*49*/
 select p.product_name, SUM(o.unit) as unit
