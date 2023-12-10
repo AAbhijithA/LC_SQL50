@@ -234,4 +234,14 @@ select if(mod(id,2) = 1 and id = T.total,id,if(mod(id,2) = 1,id+1,id-1)) as id, 
 from (select count(*) as total from Seat) T, Seat 
 order by id; 
 
+/*39*/
+(select U.name as results from Users U, MovieRating M
+where U.user_id = M.user_id
+group by U.user_id
+order by COUNT(*) desc, U.name asc limit 1)
+union all
+(select Mv.title from Movies Mv, MovieRating M
+where Mv.movie_id = M.movie_id and M.created_at <= '2020-02-29' and M.created_at >= '2020-02-01'
+group by Mv.movie_id
+order by AVG(M.rating) desc, Mv.title asc limit 1);
 
