@@ -146,3 +146,13 @@ from Teacher
 group by teacher_id;
 
 /*24*/
+select activity_date as day, count(distinct user_id) as active_users
+from Activity 
+where datediff('2019-07-27',activity_date) < 30 and activity_date <= '2019-07-27'
+group by day;
+
+/*25*/
+select s.product_id, fs.myear as first_year, s.quantity, s.price
+from (select product_id, min(year) as myear 
+      from Sales group by product_id) fs, Sales s
+where fs.product_id = s.product_id and fs.myear = s.year;
