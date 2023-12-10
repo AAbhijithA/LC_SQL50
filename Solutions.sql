@@ -251,3 +251,30 @@ from (select c1.visited_on, (select SUM(amount) from Customer c2 where datediff(
       group by c1.visited_on) T,
       (select min(visited_on) as MinDate from Customer) Md
 where datediff(T.visited_on,Md.MinDate) >= 6;
+
+/*41*/
+select UID.id, COUNT(*) as num
+from ((select distinct requester_id as id from RequestAccepted)
+       union
+      (select distinct accepter_id as id from RequestAccepted)) UID,
+RequestAccepted ra
+where UID.id = ra.requester_id or UID.id = ra.accepter_id
+group by UID.id
+order by num desc limit 1;
+
+/*42*/
+select ROUND(SUM(T.tiv_2016),2) as tiv_2016
+from (select i1.pid, i1.tiv_2016 
+from Insurance i1, Insurance i2
+where i1.tiv_2015 = i2.tiv_2015 and i1.pid != i2.pid and (i1.lat,i1.lon) not in (select i3.lat, i3.lon from Insurance i3 where i1.pid != i3.pid)
+group by i1.pid) T;
+
+/*43 (Tricky)*/
+/* We have dense_rank() function that assigns the same rank on the 'order by' if they are the same based upon partitioning it for every department*/
+select Department, Employee, Salary
+from (
+    select e.name as Employee, e.salary as Salary, d.name as Department, dense_rank() over (partition by d.id order by e.salary desc) Ranking
+    from Employee e inner join Department d
+    on e.departmentId = d.id
+) Query
+where Ranking <= 3;
