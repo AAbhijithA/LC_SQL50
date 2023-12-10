@@ -245,3 +245,9 @@ where Mv.movie_id = M.movie_id and M.created_at <= '2020-02-29' and M.created_at
 group by Mv.movie_id
 order by AVG(M.rating) desc, Mv.title asc limit 1);
 
+/*40*/
+select T.visited_on, T.total as amount, ROUND(T.total / 7, 2) as average_amount
+from (select c1.visited_on, (select SUM(amount) from Customer c2 where datediff(c1.visited_on,c2.visited_on) < 7 and  c1.visited_on >= c2.visited_on) as total from Customer c1
+      group by c1.visited_on) T,
+      (select min(visited_on) as MinDate from Customer) Md
+where datediff(T.visited_on,Md.MinDate) >= 6;
