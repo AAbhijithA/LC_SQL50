@@ -214,3 +214,13 @@ from (select sorted.person_name as person_name, (@w := @w + sorted.weight) as cW
       from (select @w := 0) foo, (select * from Queue order by turn) sorted 
       order by cWeight desc) T
 where T.cWeight <= 1000 limit 1;
+
+/*36 (Tricky)*/
+/* Here do union for 3 categories and count() them each for the salary */
+select "High Salary" as category, count(*) as accounts_count from Accounts where income > 50000
+union
+select "Average Salary" as category, count(*) as accounts_count from Accounts where income <= 50000 and income >= 20000
+union
+select "Low Salary" as category, count(*) as accounts_count from Accounts where income < 20000;
+
+
