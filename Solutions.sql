@@ -91,3 +91,20 @@ from (select r.contest_id, ROUND(count(u.user_id) * 100 / T.total, 2) as percent
       group by r.contest_id) fQ
 where fQ.contest_id is not null
 order by fQ.percentage desc, fQ.contest_id asc;
+
+/*19*/
+select q.query_name,
+ROUND(AVG(q.rating / q.position), 2) as quality,
+ROUND(SUM(if(q.rating < 3, 1, 0))*100 / COUNT(q.rating), 2) as poor_query_percentage
+from Queries q
+where q.query_name is not null
+group by q.query_name; 
+
+/*20*/
+/* LEFT( string, x)  takes first x characters of string from left to right, RIGHT() works in the same way but opposite */
+select LEFT(trans_date,7) as month, country, COUNT(*) as trans_count, 
+SUM(if(state = 'approved', 1, 0)) as approved_count,
+SUM(amount) as trans_total_amount,
+SUM(if(state = 'approved',amount,0)) as approved_total_amount
+from Transactions
+group by month, country;
