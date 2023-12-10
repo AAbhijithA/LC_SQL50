@@ -223,4 +223,15 @@ select "Average Salary" as category, count(*) as accounts_count from Accounts wh
 union
 select "Low Salary" as category, count(*) as accounts_count from Accounts where income < 20000;
 
+/*37*/
+select employee_id 
+from Employees 
+where salary < 30000 and manager_id not in (select employee_id from Employees)
+order by employee_id;
+
+/*38*/
+select if(mod(id,2) = 1 and id = T.total,id,if(mod(id,2) = 1,id+1,id-1)) as id, student 
+from (select count(*) as total from Seat) T, Seat 
+order by id; 
+
 
